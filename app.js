@@ -41,6 +41,7 @@ $.state.moveDirection = "S"
 
 function keyUp(e) {
     move(e, false);
+    
   }
   
   function keyDown(e) {
@@ -59,6 +60,8 @@ function keyUp(e) {
         $.ctx.fillStyle = "black";
         $.ctx.fillRect($.state.pos.x,$.state.pos.y ,20 ,37 );
       }else{
+        var imgSprite = new Image();
+        imgSprite.src = "img/sprite.png";
         $.ctx.drawImage(tankImg, $.state.pos.x, $.state.pos.y);
       }
       
