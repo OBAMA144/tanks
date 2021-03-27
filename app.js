@@ -8,11 +8,6 @@ const $ = {
       },
   
     state: {
-        pos:{
-          x: null,
-          y: null,
-          angle:null
-        },
         over: false,
         keys:{
           u:false,
@@ -24,16 +19,26 @@ const $ = {
   
 }
 
-$.canvas = document.getElementById("myCanvas");
-$.ctx = $.canvas.getContext("2d");
-$.ctx.fillStyle = "black";
-$.ctx.fillRect(0, 0, $.canvas.width, $.canvas.height);
-let tankImg = document.getElementById("tank");
+
+
+
+var canvas = this.__canvas = new fabric.StaticCanvas('c');
+
+let imgElement = new Image();
+imgElement.src = './assets/tank.png';
+let tankObj = new fabric.Image(imgElement, {
+  left: 50,
+  top: 50,
+  angle: 90
+});
+
+canvas.add(tankObj);
+
 
 window.addEventListener("keydown", keyDown, false);
 window.addEventListener("keyup", keyUp, false);
 
-$.state.pos = {x:$.canvas.width /2,y:$.canvas.height /2}
+//$.state.pos = {x:$.canvas.width /2,y:$.canvas.height /2}
 
 
 $.state.moveDirection = "S"
@@ -53,25 +58,13 @@ function keyUp(e) {
     if (e.keyCode === 39)  $.state.keys.r = keyDown;
     if (e.keyCode === 38)  $.state.keys.u = keyDown;
     if (e.keyCode === 40)  $.state.keys.d = keyDown;
+
   }
 
-  function paintTank(erase){
-      if(erase){
-        $.ctx.fillStyle = "black";
-        $.ctx.fillRect($.state.pos.x,$.state.pos.y ,20 ,37 );
-      }else{
-        var imgSprite = new Image();
-        imgSprite.src = "img/sprite.png";
-        $.ctx.drawImage(tankImg, $.state.pos.x, $.state.pos.y);
-      }
-      
-      
-  }
+   
 
   
-
-  
-  function update(){
+  function updateTankPosition(){
     let offset_x=0,offset_y=0;
     
     if($.state.keys.l) offset_x--;
@@ -79,14 +72,15 @@ function keyUp(e) {
     if($.state.keys.u) offset_y--;
     if($.state.keys.d) offset_y++;
 
+    tankObj.left += offset_x;
+    tankObj.top  += offset_y;
     $.state.pos.x += offset_x,$.state.pos.y += offset_y;
   
   }
 
   function tick(){
-    paintTank(true);
-    update()    
-    paintTank(false);
+    updateTankPosition()    
+    
     
 }
 
