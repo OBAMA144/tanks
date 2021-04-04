@@ -24,24 +24,26 @@ const $ = {
 
 var canvas = this.__canvas = new fabric.StaticCanvas('c');
 
-let imgElement = new Image();
-imgElement.src = './assets/tank.png';
-let tankObj = new fabric.Image(imgElement, {
-  left: 50,
-  top: 50,
-  angle: 90
+
+let imgUrl = './assets/tank.png';
+
+let tank;
+
+fabric.Image.fromURL(imgUrl, function(img) {
+  canvas.add(
+    img.set({  
+      originX: "center",  
+      originY: "center", 
+      left: 100, 
+      top: 100}
+      ));
+  tank = img
 });
 
-canvas.add(tankObj);
 
 
 window.addEventListener("keydown", keyDown, false);
 window.addEventListener("keyup", keyUp, false);
-
-//$.state.pos = {x:$.canvas.width /2,y:$.canvas.height /2}
-
-
-$.state.moveDirection = "S"
 
 
 function keyUp(e) {
@@ -65,16 +67,34 @@ function keyUp(e) {
 
   
   function updateTankPosition(){
-    let offset_x=0,offset_y=0;
     
-    if($.state.keys.l) offset_x--;
-    if($.state.keys.r) offset_x++;
-    if($.state.keys.u) offset_y--;
-    if($.state.keys.d) offset_y++;
+    
+    if($.state.keys.l) {
+      tank.angle--;
+    };
+    if($.state.keys.r) {
+      tank.angle++;
+    };
+    if($.state.keys.d) {
+      
+        tank.left -= Math.sin(tank.angle * Math.PI / 180);
+        tank.top  += Math.cos(tank.angle * Math.PI / 180);
+      
+      
+      };
+    if($.state.keys.u) {
+      if(tank.left > 15 ){
+          tank.left += Math.sin(tank.angle * Math.PI / 180);
+          tank.top  -= Math.cos(tank.angle * Math.PI / 180);
+      } else{
+        tank.left = 16;
+      }
+      };
 
-    tankObj.left += offset_x;
-    tankObj.top  += offset_y;
-    $.state.pos.x += offset_x,$.state.pos.y += offset_y;
+    // tank.left += offset_x;
+    // tank.top  += offset_y;
+
+    canvas.renderAll();
   
   }
 
